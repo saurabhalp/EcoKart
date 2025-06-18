@@ -4,14 +4,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.ecokart.components.BottomNavigationBarSection
+import com.example.ecokart.components.TopAppBarSection
+import com.example.ecokart.screens.EcoCartScreen
+import com.example.ecokart.screens.EcoDashboardScreen
+import com.example.ecokart.screens.ProductDetailScreen
+import com.example.ecokart.screens.SplashScreen
 import com.example.ecokart.ui.theme.EcoKartTheme
+import com.example.ecokart.viewModel.EcoDashboardViewModel
+import com.example.ecokart.viewModel.ProductViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,16 +34,90 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EcoKartTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                val navController = rememberNavController()
+                val productViewModel: ProductViewModel = viewModel()
+                val dashboardViewModel: EcoDashboardViewModel = viewModel()
+                    ecoKartApp(
+                        modifier = Modifier,
+                        productViewModel = productViewModel,
+                        dashboardViewModel = dashboardViewModel
                     )
-                }
             }
         }
     }
 }
+@Composable
+fun ecoKartApp(modifier: Modifier = Modifier,
+               productViewModel: ProductViewModel,
+               dashboardViewModel: EcoDashboardViewModel
+               ) {
+    val navController = rememberNavController()
+
+    // Watch current route
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry.value?.destination?.route
+
+
+    NavHost(
+        navController = navController,
+        startDestination = "splash",
+        modifier = modifier
+    ) {
+        composable("splash") {
+            SplashScreen(
+                modifier = Modifier,
+                navController = navController
+            )
+        }
+
+        composable("home") {
+            // Only show Scaffold if not on splash screen
+            Scaffold(
+                topBar = { TopAppBarSection() },
+                bottomBar = { BottomNavigationBarSection(navController) }
+            ) { padding ->
+                Box(
+                    modifier = Modifier
+                        .padding(padding)
+                        .systemBarsPadding()
+                        // adds safe area around status/navigation bars
+                ) {
+                    EcoCartScreen(
+                        navController,
+
+                    )
+                }
+            }
+        }
+        composable("dashboard") {
+            // Only show Scaffold if not on splash screen
+            Scaffold(
+                topBar = { TopAppBarSection() },
+                bottomBar = { BottomNavigationBarSection(navController) }
+            ) { padding ->
+                Box(
+                    modifier = Modifier
+                        .padding(padding)
+                        .systemBarsPadding()
+                    // adds safe area around status/navigation bars
+                ) {
+                    EcoDashboardScreen(dashboardViewModel)
+                }
+            }
+        }
+
+                composable("productDetail"){
+            ProductDetailScreen(
+                navController = navController,
+                productViewModel = productViewModel
+            )
+        }
+    }
+}
+
+
+
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
