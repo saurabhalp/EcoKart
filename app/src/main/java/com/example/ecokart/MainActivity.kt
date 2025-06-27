@@ -23,9 +23,11 @@ import com.example.ecokart.components.TopAppBarSection
 import com.example.ecokart.screens.EcoCartScreen
 import com.example.ecokart.screens.EcoDashboardScreen
 import com.example.ecokart.screens.ProductDetailScreen
+import com.example.ecokart.screens.ProductScreen
 import com.example.ecokart.screens.SplashScreen
 import com.example.ecokart.ui.theme.EcoKartTheme
 import com.example.ecokart.viewModel.EcoDashboardViewModel
+import com.example.ecokart.viewModel.Product
 import com.example.ecokart.viewModel.ProductViewModel
 
 class MainActivity : ComponentActivity() {
@@ -79,12 +81,29 @@ fun ecoKartApp(modifier: Modifier = Modifier,
                 Box(
                     modifier = Modifier
                         .padding(padding)
-                        .systemBarsPadding()
                         // adds safe area around status/navigation bars
                 ) {
                     EcoCartScreen(
                         navController,
-
+                        productViewModel
+                    )
+                }
+            }
+        }
+        composable("productScreen") {
+            // Only show Scaffold if not on splash screen
+            Scaffold(
+                topBar = { TopAppBarSection() },
+                bottomBar = { BottomNavigationBarSection(navController) }
+            ) { padding ->
+                Box(
+                    modifier = Modifier
+                        .padding(padding)
+                    // adds safe area around status/navigation bars
+                ) {
+                    ProductScreen(
+                        productViewModel,
+                        navController = navController,
                     )
                 }
             }
@@ -106,12 +125,19 @@ fun ecoKartApp(modifier: Modifier = Modifier,
             }
         }
 
-                composable("productDetail"){
-            ProductDetailScreen(
-                navController = navController,
-                productViewModel = productViewModel
-            )
+        composable("productDetail") {
+            val selectedProduct = navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.get<Product>("selectedProduct")
+
+            selectedProduct?.let {
+                ProductDetailScreen(
+                    navController = navController,
+                    product = it
+                )
+            }
         }
+
     }
 }
 

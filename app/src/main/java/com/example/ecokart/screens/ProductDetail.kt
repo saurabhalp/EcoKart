@@ -43,17 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.ecokart.components.BottomNavigationBarSection
 import com.example.ecokart.viewModel.ProductViewModel
 import com.example.ecokart.R
+import com.example.ecokart.viewModel.Product
 
 @Composable
 fun ProductDetailScreen(
     navController: NavController,
-    productViewModel: ProductViewModel
+    product : Product
 ) {
-    val product = productViewModel.loadDemoProduct()
-
     Scaffold(
         topBar =  {
             Row(
@@ -62,7 +62,6 @@ fun ProductDetailScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
@@ -86,14 +85,13 @@ fun ProductDetailScreen(
                 .padding(innerPadding).systemBarsPadding()
                 .verticalScroll(rememberScrollState()).padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = product.imageRes),
+            AsyncImage(
+                model = product.imageUrl,
                 contentDescription = product.name,
                 modifier = Modifier
+                    .height(120.dp)
                     .fillMaxWidth()
-                    .height(220.dp)
-                    .clip(RoundedCornerShape(16.dp)).padding(top = 4.dp),
-                contentScale = ContentScale.Fit
+                    .clip(RoundedCornerShape(8.dp)),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -106,7 +104,7 @@ fun ProductDetailScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Price: $${product.price}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text("Price: Rs${product.price}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -194,12 +192,4 @@ fun ProductDetailScreen(
     }
 }
 
-@SuppressLint("ViewModelConstructorInComposable")
-@Preview
-@Composable
-fun detailPreview(){
-    ProductDetailScreen(
-        navController = rememberNavController(),
-        productViewModel = ProductViewModel()
-    )
-}
+

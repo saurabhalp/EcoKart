@@ -29,7 +29,7 @@ fun TopAppBarSection() {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(id = R.drawable.ecokart), // replace with your leaf icon
+                painter = painterResource(id = R.drawable.ecokart),
                 contentDescription = "EcoCart Logo",
                 tint = Color(0xFF4CAF50),
                 modifier = Modifier.size(28.dp)
