@@ -1,8 +1,12 @@
 package com.example.ecokart.screens
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,11 +35,14 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,16 +55,25 @@ import com.example.ecokart.components.BottomNavigationBarSection
 import com.example.ecokart.viewModel.ProductViewModel
 import com.example.ecokart.R
 import com.example.ecokart.viewModel.Product
+import com.example.ecokart.viewModel.CartViewModel
 
 @Composable
 fun ProductDetailScreen(
     navController: NavController,
-    product : Product
+    product : Product,
+    cartViewModel: CartViewModel
 ) {
+    var selectedDelivery by remember { mutableStateOf("Green Delivery") }
+    var selectedPackaging  by remember { mutableStateOf("Sustainable Packaging") }
+    val context = LocalContext.current
     Scaffold(
         topBar =  {
             Row(
-            modifier = Modifier.fillMaxWidth().background(color = Color.White).padding(16.dp).statusBarsPadding(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Color.White)
+                .padding(16.dp)
+                .statusBarsPadding(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -78,12 +94,14 @@ fun ProductDetailScreen(
         }
         }
 ,
-        bottomBar = { BottomNavigationBarSection(navController) }
+        bottomBar = { BottomNavigationBarSection(navController,cartViewModel) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding).systemBarsPadding()
-                .verticalScroll(rememberScrollState()).padding(16.dp)
+                .padding(innerPadding)
+                .systemBarsPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
         ) {
             AsyncImage(
                 model = product.imageUrl,
@@ -128,33 +146,30 @@ fun ProductDetailScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text("Delivery Options", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = false, onClick = { })
-                    Text("Green Delivery")
+                listOf("Green Delivery", "Standard Delivery").forEach { option ->
+                    DeliveryOptionCard(
+                        text = option,
+                        selected = selectedDelivery == option,
+                        onClick = { selectedDelivery = option }
+                    )
                 }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = false, onClick = { })
-                    Text("Standard Delivery")
-                }
-
             }
 
-            Text(text = "Packaging Options", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Text("Packaging Options", fontWeight = FontWeight.Bold, fontSize = 16.sp)
 
+            Spacer(modifier = Modifier.height(8.dp))
             Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = false, onClick = { })
-                    Text("Sustainable Packaging")
-                }
-                Row(verticalAlignment = Alignment.CenterVertically){
-                    RadioButton(selected = false, onClick = { })
-                    Text("Normal Packaging")
+                listOf("Sustainable Packaging", "Normal Packaging").forEach { option ->
+                    DeliveryOptionCard(
+                        text = option,
+                        selected = selectedPackaging == option,
+                        onClick = { selectedPackaging = option }
+                    )
                 }
             }
 
@@ -165,7 +180,10 @@ fun ProductDetailScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { /* Handle cart */ },
+                    onClick = {
+                        Toast.makeText(context, "product added to cart", Toast.LENGTH_SHORT).show()
+                        cartViewModel.addToCart(product)
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
@@ -176,14 +194,16 @@ fun ProductDetailScreen(
                 }
 
                 Button(
-                    onClick = { /* Handle resale */ },
+                    onClick = {
+                        cartViewModel.addToCart(product)
+                        navController.navigate("checkout") },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
-                            ,colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
+                    ,colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
 
                 ) {
-                    Text("Select Resale", color = Color.White)
+                    Text("Buy Now", color = Color.White)
                 }
             }
 
@@ -192,4 +212,26 @@ fun ProductDetailScreen(
     }
 }
 
+@Composable
+fun DeliveryOptionCard(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (selected) Color(0xFF4CAF50) else Color.LightGray)
+            .padding(12.dp)
+            .clickable { onClick() }
+    ) {
+        Text(
+            text = text,
+            color = if (selected) Color.White else Color.Black,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+        )
+    }
+}
 

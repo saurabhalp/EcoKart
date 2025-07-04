@@ -1,5 +1,6 @@
 package com.example.ecokart.components
-
+import androidx.compose.material.BadgedBox
+import androidx.compose.material.Badge
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -18,11 +19,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.ecokart.viewModel.CartViewModel
 
 @Composable
-fun BottomNavigationBarSection(navController: NavController) {
-    // Maintain selected state
-    val selectedItem = rememberSaveable { mutableStateOf("home") }
+fun BottomNavigationBarSection(navController: NavController,cartViewModel: CartViewModel) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     BottomNavigation(
         backgroundColor = Color.White,
@@ -32,52 +37,68 @@ fun BottomNavigationBarSection(navController: NavController) {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") },
-            selected = selectedItem.value == "home",
+            selected = currentRoute == "home",
             onClick = {
-                selectedItem.value = "home"
-                navController.navigate("home") {
-                    launchSingleTop = true
-                    restoreState = true
+                if (currentRoute != "home") {
+                    navController.navigate("home") {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo("home") { inclusive = false }
+                    }
                 }
             }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Product") },
             label = { Text("Product") },
-            selected = selectedItem.value == "productScreen",
+            selected = currentRoute == "productScreen",
             onClick = {
-                selectedItem.value = "productScreen"
-                navController.navigate("productScreen") {
-                    launchSingleTop = true
-                    restoreState = true
+                if (currentRoute != "productScreen") {
+                    navController.navigate("productScreen") {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo("home") { inclusive = false }
+                    }
                 }
             }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Receipt, contentDescription = "Checkout") },
+            icon = {
+                BadgedBox(
+                    badge = {
+                        if (cartViewModel.cartItems.isNotEmpty()) {
+                            Badge {
+                                Text("${cartViewModel.cartItems.size}")
+                            }
+                        }
+                    }
+                ) {
+                    Icon(Icons.Default.Receipt, contentDescription = "Checkout")
+                }
+            },
             label = { Text("Checkout") },
-            selected = selectedItem.value == "checkout",
+            selected = currentRoute == "checkout",
             onClick = {
-                selectedItem.value = "checkout"
-                // Add your navigation logic for the Checkout screen
-                // navController.navigate("checkout")
+                if (currentRoute != "checkout") {
+                    navController.navigate("checkout") {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo("home") { inclusive = false }
+                    }
+                }
             }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Dashboard, contentDescription = "Dashboard") },
-            label = {
-                Text(
-                    "Dashboard",
-                    maxLines = 1,
-                    modifier = Modifier.horizontalScroll(rememberScrollState())
-                )
-            },
-            selected = selectedItem.value == "dashboard",
+            label = { Text("Dashboard") },
+            selected = currentRoute == "dashboard",
             onClick = {
-                selectedItem.value = "dashboard"
-                navController.navigate("dashboard") {
-                    launchSingleTop = true
-                    restoreState = true
+                if (currentRoute != "dashboard") {
+                    navController.navigate("dashboard") {
+                        launchSingleTop = true
+                        restoreState = true
+                        popUpTo("home") { inclusive = false }
+                    }
                 }
             }
         )

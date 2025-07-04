@@ -1,5 +1,6 @@
 package com.example.ecokart.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,18 +31,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 
 @Composable
-fun EcoDashboardScreen(viewModel: EcoDashboardViewModel = viewModel()) {
+fun EcoDashboardScreen(viewModel: EcoDashboardViewModel = viewModel(),navController: NavController) {
     val ecoScore by viewModel.ecoScore.collectAsState()
     val recentPurchases by viewModel.recentPurchases.collectAsState()
     val carbonSavings by viewModel.carbonSavings.collectAsState()
-
+    val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
 
         Column(
@@ -88,15 +92,17 @@ fun EcoDashboardScreen(viewModel: EcoDashboardViewModel = viewModel()) {
             CardSection(title = "Explore Eco-Friendly Options") {
                 Column {
                     Button(
-                        onClick = { /* TODO: Navigate */ },
-                        modifier = Modifier.fillMaxWidth()
+                        onClick = { Toast.makeText(context, "Buy eco friendly products for eco friendly life", Toast.LENGTH_LONG).show() },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(Color.Black)
                     ) {
                         Text("Shop Sustainable Products")
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
-                        onClick = { /* TODO: Navigate */ },
-                        modifier = Modifier.fillMaxWidth()
+                        onClick = { navController.navigate("productScreen")  },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(Color.Black)
                     ) {
                         Text("Learn More About Eco Living")
                     }

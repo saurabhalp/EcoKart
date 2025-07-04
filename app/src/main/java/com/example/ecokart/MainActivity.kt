@@ -20,12 +20,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.ecokart.components.BottomNavigationBarSection
 import com.example.ecokart.components.TopAppBarSection
+import com.example.ecokart.screens.CheckoutScreen
 import com.example.ecokart.screens.EcoCartScreen
 import com.example.ecokart.screens.EcoDashboardScreen
 import com.example.ecokart.screens.ProductDetailScreen
 import com.example.ecokart.screens.ProductScreen
 import com.example.ecokart.screens.SplashScreen
 import com.example.ecokart.ui.theme.EcoKartTheme
+import com.example.ecokart.viewModel.CartViewModel
 import com.example.ecokart.viewModel.EcoDashboardViewModel
 import com.example.ecokart.viewModel.Product
 import com.example.ecokart.viewModel.ProductViewModel
@@ -39,19 +41,22 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val productViewModel: ProductViewModel = viewModel()
                 val dashboardViewModel: EcoDashboardViewModel = viewModel()
-                    ecoKartApp(
+                val cartViewModel: CartViewModel = viewModel()
+                    EcoKartApp(
                         modifier = Modifier,
                         productViewModel = productViewModel,
-                        dashboardViewModel = dashboardViewModel
+                        dashboardViewModel = dashboardViewModel,
+                        cartViewModel = cartViewModel
                     )
             }
         }
     }
 }
 @Composable
-fun ecoKartApp(modifier: Modifier = Modifier,
+fun EcoKartApp(modifier: Modifier = Modifier,
                productViewModel: ProductViewModel,
-               dashboardViewModel: EcoDashboardViewModel
+               dashboardViewModel: EcoDashboardViewModel,
+               cartViewModel: CartViewModel
                ) {
     val navController = rememberNavController()
 
@@ -73,15 +78,13 @@ fun ecoKartApp(modifier: Modifier = Modifier,
         }
 
         composable("home") {
-            // Only show Scaffold if not on splash screen
             Scaffold(
                 topBar = { TopAppBarSection() },
-                bottomBar = { BottomNavigationBarSection(navController) }
+                bottomBar = { BottomNavigationBarSection(navController,cartViewModel) }
             ) { padding ->
                 Box(
                     modifier = Modifier
                         .padding(padding)
-                        // adds safe area around status/navigation bars
                 ) {
                     EcoCartScreen(
                         navController,
@@ -91,15 +94,13 @@ fun ecoKartApp(modifier: Modifier = Modifier,
             }
         }
         composable("productScreen") {
-            // Only show Scaffold if not on splash screen
             Scaffold(
                 topBar = { TopAppBarSection() },
-                bottomBar = { BottomNavigationBarSection(navController) }
+                bottomBar = { BottomNavigationBarSection(navController,cartViewModel) }
             ) { padding ->
                 Box(
                     modifier = Modifier
                         .padding(padding)
-                    // adds safe area around status/navigation bars
                 ) {
                     ProductScreen(
                         productViewModel,
@@ -109,18 +110,16 @@ fun ecoKartApp(modifier: Modifier = Modifier,
             }
         }
         composable("dashboard") {
-            // Only show Scaffold if not on splash screen
             Scaffold(
                 topBar = { TopAppBarSection() },
-                bottomBar = { BottomNavigationBarSection(navController) }
+                bottomBar = { BottomNavigationBarSection(navController,cartViewModel) }
             ) { padding ->
                 Box(
                     modifier = Modifier
                         .padding(padding)
                         .systemBarsPadding()
-                    // adds safe area around status/navigation bars
                 ) {
-                    EcoDashboardScreen(dashboardViewModel)
+                    EcoDashboardScreen(dashboardViewModel,navController)
                 }
             }
         }
@@ -133,8 +132,27 @@ fun ecoKartApp(modifier: Modifier = Modifier,
             selectedProduct?.let {
                 ProductDetailScreen(
                     navController = navController,
-                    product = it
+                    product = it,
+                    cartViewModel = cartViewModel
                 )
+            }
+        }
+
+        composable("checkout"){
+            Scaffold(
+                topBar = { TopAppBarSection() },
+                bottomBar = { BottomNavigationBarSection(navController,cartViewModel) }
+            ) { padding ->
+                Box(
+                    modifier = Modifier
+                        .padding(padding)
+                        .systemBarsPadding()
+                ) {
+                    CheckoutScreen(
+                        navController = navController,
+                        cartViewModel = cartViewModel
+                    )
+                }
             }
         }
 
