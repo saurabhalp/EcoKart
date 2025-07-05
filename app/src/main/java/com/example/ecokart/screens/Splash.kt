@@ -45,7 +45,7 @@ fun SplashScreen(navController: NavHostController,modifier: Modifier) {
             Icon(
                 painter = painterResource(id = R.drawable.ecokart), // Add your vector here
                 contentDescription = "ecoKart Logo",
-                tint = Color(0xFF388E3C), // Darker green
+                tint = Color(0xFF388E3C),
                 modifier = Modifier.size(200.dp).padding(2.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
