@@ -36,7 +36,7 @@ val clothingProductList = listOf(
     Product(
         name = "Organic Cotton T-shirt",
         price = 18.99,
-        imageUrl = "https://brownliving.in/cdn/shop/products/organic-cotton-naturally-dyed-slate-grey-menst-shirt-sustainable-products-on-brown-living-214627.jpg?v=1749561815&width=900",
+        imageUrl = "https://n.nordstrommedia.com/id/sr3/81755c3a-446d-4b32-a3b6-1b8278b10b62.jpeg?crop=pad&pad_color=FFF&format=jpeg&w=780&h=1196",
         description = "Soft, breathable, and made from 100% organic cotton. Perfect for everyday wear and sustainable fashion.",
         ecoScore = 80
     ),
@@ -74,7 +74,7 @@ val technologyProductList = listOf(    // 💻 Technology
     Product(
         name = "Smartphone Stand",
         price = 14.50,
-        imageUrl = "https://m.media-amazon.com/images/I/61RahTQtAqL.jpg",
+        imageUrl = "https://www.ugreenindia.com/cdn/shop/files/61odqf95u0l-_sl1500.jpg",
         description = "A simple, adjustable stand to hold your phone for video calls, reading, or watching movies.",
         ecoScore = 60
     )
@@ -85,21 +85,21 @@ val ecoFriendlyProductList =listOf(
     Product(
         name = "Stainless Steel Bottle",
         price = 25.00,
-        imageUrl = "https://m.media-amazon.com/images/I/61RahTQtAqL.jpg",
+        imageUrl = "https://classicsteels.in/cdn/shop/products/Jointless-Bottle-Single-Wall-Stainless-Steel-Bottle-Classic-Steels-6357.jpg?v=1693756285&width=1946",
         description = "Durable and reusable bottle to reduce plastic waste. Perfect for hot or cold drinks.",
         ecoScore = 95
     ),
     Product(
         name = "Bamboo Toothbrush",
         price = 10.00,
-        imageUrl = "https://m.media-amazon.com/images/I/61RahTQtAqL.jpg",
+        imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn-CUVRL2dr4SA1bJwh04hSA55xnRge89kiw&s",
         description = "Eco-friendly bamboo toothbrush with soft bristles, ideal for a sustainable and healthy routine.",
         ecoScore = 90
     ),
     Product(
         name = "Cotton Tote Bag",
         price = 15.00,
-        imageUrl = "https://m.media-amazon.com/images/I/61RahTQtAqL.jpg",
+        imageUrl = "https://thoppia.com/wp-content/uploads/2022/03/textura_cotton_tote_bag_beige-yellow_1.jpg",
         description = "Sturdy and stylish tote bag made from 100% cotton, ideal for shopping and daily use.",
         ecoScore = 85
     ),
@@ -125,14 +125,14 @@ val homeAndOtherProductList = listOf(
     Product(
         name = "Wooden Serving Bowl",
         price = 18.99,
-        imageUrl = "https://nestasia.in/cdn/shop/files/stylish-cresta-set-of-6-ceramic-coffee-mug-green-300ml.jpg?v=1726293798&width=600",
+        imageUrl = "https://modernquests.com/cdn/shop/files/sg-home-wooden-serving-bowl-black-6.jpg?v=1719058551&width=1200",
         description = "Rustic and beautifully handcrafted wooden bowl for salads, fruits, or decoration.",
         ecoScore = 78
     ),
     Product(
         name = "LED Desk Lamp",
         price = 34.99,
-        imageUrl = "https://nestasia.in/cdn/shop/files/stylish-cresta-set-of-6-ceramic-coffee-mug-green-300ml.jpg?v=1726293798&width=600",
+        imageUrl = "https://in.shop.lighting.philips.com/cdn/shop/files/Orbit_desk_light_grande.png?v=1747311743",
         description = "Modern LED lamp with adjustable brightness, ideal for work or reading environments.",
         ecoScore = 65
     )
